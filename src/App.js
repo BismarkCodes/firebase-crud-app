@@ -1,6 +1,12 @@
 import { useEffect, useState } from "react";
 import "./App.css";
-import { collection, getDocs, addDoc } from "firebase/firestore";
+import {
+  collection,
+  getDocs,
+  addDoc,
+  doc,
+  updateDoc,
+} from "firebase/firestore";
 import { db } from "./firebase-config";
 
 function App() {
@@ -24,7 +30,17 @@ function App() {
 
   // function to create new user
   const createUser = async () => {
-    await addDoc(usersCollectionRef, { name: newName, age: newAge });
+    await addDoc(usersCollectionRef, { name: newName, age: Number(newAge) });
+  };
+
+  // function to update user
+  const updateUser = async (id, age) => {
+    // getting the specific document to update
+    const userDoc = doc(db, "users", id);
+    // update function
+    const newInput = { age: age + 1 };
+    // updating document
+    await updateDoc(userDoc, newInput);
   };
 
   return (
@@ -46,6 +62,7 @@ function App() {
         <div>
           <h1>Name: {user.name} </h1>
           <h2>Age: {user.age}</h2>
+          <button onClick={updateUser(user.id, user.age)}>Increase age</button>
         </div>
       ))}
     </div>
