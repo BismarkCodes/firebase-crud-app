@@ -31,7 +31,11 @@ function App() {
 
   // function to create new user
   const createUser = async () => {
-    await addDoc(usersCollectionRef, { name: newName, age: Number(newAge) });
+    await addDoc(usersCollectionRef, {
+      name: newName,
+      age: Number(newAge),
+      del: 0,
+    });
   };
 
   // function to update user
