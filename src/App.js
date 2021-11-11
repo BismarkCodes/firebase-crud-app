@@ -6,7 +6,7 @@ import {
   addDoc,
   doc,
   updateDoc,
-  deleteDoc,
+  // deleteDoc,
 } from "firebase/firestore";
 import { db } from "./firebase-config";
 
@@ -27,7 +27,7 @@ function App() {
 
     getUsers();
     return () => {};
-  }, []);
+  });
 
   // function to create new user
   const createUser = async () => {
@@ -49,7 +49,9 @@ function App() {
     // getting the specific user to delete
     const userDoc = doc(db, "users", id);
     // delete function
-    await deleteDoc(userDoc);
+    // await deleteDoc(userDoc);
+    // custom delete function
+    await updateDoc(userDoc, { del: 1 });
   };
 
   return (
@@ -67,16 +69,18 @@ function App() {
       <button onClick={createUser}>Create user</button>
 
       {/* display users */}
-      {users.map((user) => (
-        <div>
-          <h1>Name: {user.name} </h1>
-          <h2>Age: {user.age}</h2>
-          <button onClick={() => updateUser(user.id, user.age)}>
-            Increase age
-          </button>
-          <button onClick={() => deleteUser(user.id)}>Delete user</button>
-        </div>
-      ))}
+      {users.map((user) =>
+        user.del === 0 ? (
+          <div>
+            <h1>Name: {user.name} </h1>
+            <h2>Age: {user.age}</h2>
+            <button onClick={() => updateUser(user.id, user.age)}>
+              Increase age
+            </button>
+            <button onClick={() => deleteUser(user.id)}>Delete user</button>
+          </div>
+        ) : null
+      )}
     </div>
   );
 }
